@@ -30,11 +30,8 @@ d3.csv("data.csv").then(function(Jdata) {
     // Step 1: Parse Data/Cast as numbers
     // ==============================
     Jdata.forEach(function(data) {
-        data.healthcareLow = +data.healthcareLow;
-        data.healthcare = +data.healthcare;
         data.age = +data.age;
-        data.smokes = +data.smokes;
-        data.poverty = +data.poverty;
+        data.smokes = +data.smokes;   
       });
   
       // Step 2: Create scale functions  
@@ -63,72 +60,57 @@ d3.csv("data.csv").then(function(Jdata) {
 
          // Step 5: Create Circles
     // ==============================
-    // var circlesGroup = chartGroup.selectAll("circle")
-    // .data(Jdata)
-    // .enter()
-    // .append("circle")
-    // .attr("cx", d => xLinearScale(d.smokes))
-    // .attr("cy", d => yLinearScale(d.age))
-    // .attr("r", "15")
-    // .attr("fill", "pink")
-    // .attr("opacity", ".5");
-
-
-    var node = svg.selectAll("g")
-                .data(Jdata)
-                .enter()
-                .append("g");
-
-node.append("circle")
-  .attr("class", "dot")
-  .attr("cx", d => xLinearScale(d.smokes))
+    let circle= chartGroup.selectAll("circle")
+    .data(Jdata)
+    .enter()
+    .append("circle")
+    
+    let circleGroup = circle
+    .attr("cx", d => xLinearScale(d.smokes))
     .attr("cy", d => yLinearScale(d.age))
-  .attr("r", 15).attr("fill", "pink")
- .attr("opacity", ".5")
- .text(function(d) { return x(d.abbr); });
+    .attr("r", "15")
+    .attr("fill", "pink")
+    .attr("stroke", "black")
+    .attr("stroke-width", "3")
+    .attr("opacity", ".75");
 
-// node.append("text")
-//   .attr("x", function(d) { return x(d.abbr); })
-//   .attr("y", function(d) { return y(d.abbr); })
-//   .text("fooLabelsOfScatterPoints");
+        // Step 6: Create Text Labels
+    // ==============================
 
-    //  // Step 6: Initialize tool tip
-    // // ==============================
-    // var toolTip = d3.tip()
-    //   .attr("class", "tooltip")
-    //   .offset([80, -60])
-    //   .html(function(d) {
-    //     return (`${d.state}<br>Abbr: ${d.abbr}`);
-    //   });
+    let text = chartGroup .selectAll("text")
+                           .data(Jdata)
+                           .enter()
+                            .append("text");
+    text;
 
-    //    // Step 7: Create tooltip in the chart
-    // // ==============================
-    // chartGroup.call(toolTip);
+    let textLabels = text  .attr("x",  d => xLinearScale(d.smokes))
+                          .attr("y", d => yLinearScale(d.age))
+                          .attr("font-family", "sans-serif")
+                          .attr("font-size", "10px")
+                          .attr("fill", "black") 
+                          .attr("font-weight", "bold")
+                          .attr("text-anchor", "middle")
+                          .text((d,i) => { return d.abbr;});   
+    textLabels;             
+ 
+      // Step 7: Create axes labels
+    // ==============================
 
-    //   // Step 8: Create event listeners to display and hide the tooltip
-    // // ==============================
-    // circlesGroup.on("click", function(data) {
-    //     toolTip.show(data, this);
-    //   })
-    //     // onmouseout event
-    //     .on("mouseout", function(data, index) {
-    //       toolTip.hide(data);
-    //     });
-
-    // // Create axes labels
-    // chartGroup.append("text")
-    //   .attr("transform", "rotate(-90)")
-    //   .attr("y", 0 - margin.left + 40)
-    //   .attr("x", 0 - (height / 2))
-    //   .attr("dy", "1em")
-    //   .attr("class", "axisText")
-    //   .text("Number of Billboard 100 Hits");
+    chartGroup.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left + 40)
+      .attr("x", 0 - (height / 2))
+      .attr("dy", "1em")
+      .attr("class", "axisText")
+      .attr("font-weight", "bold")
+      .text("Smokers");
 
 
-    //   chartGroup.append("text")
-    //   .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-    //   .attr("class", "axisText")
-    //   .text("Hair Metal Band Hair Length (inches)");
+      chartGroup.append("text")
+      .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
+      .attr("class", "axisText")
+      .attr("font-weight", "bold")
+      .text("Age");
   }).catch(function(error) {
     console.log(error);
   
