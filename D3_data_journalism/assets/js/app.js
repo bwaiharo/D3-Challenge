@@ -18,7 +18,7 @@ var svg = d3.select(".chart")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
-var chartGroup = svg.append("g")
+const chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import Data
@@ -33,6 +33,8 @@ d3.csv("data.csv").then(function(Jdata) {
         data.age = +data.age;
         data.smokes = +data.smokes;   
       });
+
+      let copyJdata = JSON.parse(JSON.stringify(Jdata));;
   
       // Step 2: Create scale functions  
       // ==============================
@@ -66,7 +68,7 @@ d3.csv("data.csv").then(function(Jdata) {
     .enter()
     .append("circle")
     .attr("cx", d => xLinearScale(d.smokes))
-    .attr("cy", d => yLinearScale(d.age))
+    .attr("cy", (d, i) => { console.log(i); return yLinearScale(d.age)})
     .attr("r", "15")
     .attr("fill", "pink")
     .attr("stroke", "black")
@@ -77,31 +79,32 @@ d3.csv("data.csv").then(function(Jdata) {
 
     //    // Step 7: Initialize tool tip
     // // ==============================
-    // var tool_tip = d3.tip()
-    // .attr("class", "d3-tip")
-    // .offset([-8, 0])
-    // .html((d)=> { return  d.abbr; });
-    // chartGroup.call(tool_tip);
+    var tool_tip = d3.tip()
+    .attr("class", "d3-tip")
+    .offset([-8, 10])
+    .html((d)=> { return  d.abbr; });
+    svg.call(tool_tip);
 
-    //  // Step 8: Create event listeners to display and hide the tooltip
-    // // ==============================
-    // circle.on("click", function(data) {
-    //   tool_tip.show(data, this);
-    // })
-    //   // onmouseout event
-    //   .on("mouseout", function(data, index) {
-    //     tool_tip.hide(data);
-    //   });
+     // Step 8: Create event listeners to display and hide the tooltip
+    // ==============================
+    circle.on("mouseover", function(data) {
+      tool_tip.show(data, this);
+    })
+      // onmouseout event
+      .on("mouseout", function(data, index) {
+        tool_tip.hide(data);
+      });
 
 
         // Step 6: Create Text Labels
     // ==============================
 
-    let text = chartGroup .selectAll("text")
+    let text = chartGroup .selectAll(".silly-me")
                            .data(Jdata)
                            .enter()
-                            .append("text");
-    text;
+                            .append("text")
+                            .classed("silly-me", true);
+    //text;
 
     let textLabels = text  .attr("x",  d => xLinearScale(d.smokes))
                           .attr("y", d => yLinearScale(d.age))
@@ -110,8 +113,8 @@ d3.csv("data.csv").then(function(Jdata) {
                           .attr("fill", "black") 
                           .attr("font-weight", "bold")
                           .attr("text-anchor", "middle")
-                          .text((d,i) => { return d.abbr;});   
-    textLabels;             
+                          .text((d,i) => { console.log(i); return d.abbr;});   
+    //textLabels;             
  
 
   
