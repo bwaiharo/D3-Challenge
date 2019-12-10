@@ -58,14 +58,13 @@ d3.csv("data.csv").then(function(Jdata) {
     chartGroup.append("g")
       .call(leftAxis);
 
+     
          // Step 5: Create Circles
     // ==============================
     let circle= chartGroup.selectAll("circle")
     .data(Jdata)
     .enter()
     .append("circle")
-    
-    let circleGroup = circle
     .attr("cx", d => xLinearScale(d.smokes))
     .attr("cy", d => yLinearScale(d.age))
     .attr("r", "15")
@@ -73,6 +72,27 @@ d3.csv("data.csv").then(function(Jdata) {
     .attr("stroke", "black")
     .attr("stroke-width", "3")
     .attr("opacity", ".75");
+
+
+
+    //    // Step 7: Initialize tool tip
+    // // ==============================
+    // var tool_tip = d3.tip()
+    // .attr("class", "d3-tip")
+    // .offset([-8, 0])
+    // .html((d)=> { return  d.abbr; });
+    // chartGroup.call(tool_tip);
+
+    //  // Step 8: Create event listeners to display and hide the tooltip
+    // // ==============================
+    // circle.on("click", function(data) {
+    //   tool_tip.show(data, this);
+    // })
+    //   // onmouseout event
+    //   .on("mouseout", function(data, index) {
+    //     tool_tip.hide(data);
+    //   });
+
 
         // Step 6: Create Text Labels
     // ==============================
@@ -93,7 +113,9 @@ d3.csv("data.csv").then(function(Jdata) {
                           .text((d,i) => { return d.abbr;});   
     textLabels;             
  
-      // Step 7: Create axes labels
+
+  
+      // Step 8: Create axes labels
     // ==============================
 
     chartGroup.append("text")
